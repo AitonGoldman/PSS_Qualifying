@@ -1,0 +1,54 @@
+# app module
+#
+# Defines a method create_app() that generates a Flask instance, configures it, and returns it. 
+#
+# gunicorn calls create_app() and uses the generated Flask instance.
+
+import os
+from lib.TableProxy import TableProxy
+from flask import Flask,current_app,Blueprint, request, g
+import routes
+import blueprints
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+from lib.DbHelper import DbHelper,POSTGRES_TYPE
+from decouple import config
+
+def create_app(test_config=None):
+    # create and configure the app
+    app = Flask(__name__, instance_relative_config=True)    
+    
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass                    
+    
+    # Getting config options - this should eventually be in it's own class
+    SECRET_KEY = config('SECRET_KEY')
+    pss_db_type = config('pss_db_type',default='postgres')
+    pss_db_name = config('pss_db_name')
+    pss_db_username = config('pss_db_username')
+    pss_db_password = config('pss_db_password')
+
+    # The CORS module is needed because the backend runs on port 8000
+    # and the html/javascript is retreived from port 80/443.  The CORS
+    # module makes sure the browser/native app doesn't puke with cross site
+    # scripting errors when ajax requests are made.
+    CORS(
+        app,
+        headers=['Content-Type', 'Accept'],
+        vary_header=False,
+        #send_wildcard=False,        
+        supports_credentials=True
+    )    
+
+    db_helper = DbHelper(pss_db_type,pss_db_username,pss_db_password,pss_db_name)    
+    db_handle = db_helper.create_db_handle(app)
+    
+    app.table_proxy = TableProxy(db_handle)
+        
+    app.register_blueprint(blueprints.event_bp)     
+                    
+    return app
+

@@ -1,0 +1,9 @@
+Flask
+iso8601
+Flask-SQLAlchemy
+Flask-Cors
+gunicorn
+sqlalchemy_utils
+python-decouple
+psycopg2
+flask-restless

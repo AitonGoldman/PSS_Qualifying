@@ -1,0 +1,4 @@
+SECRET_KEY="poop"
+test="poop"
+if True:
+    raise Exception("poop")
