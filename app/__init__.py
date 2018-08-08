@@ -5,7 +5,7 @@
 # gunicorn calls create_app() and uses the generated Flask instance.
 
 import os
-from lib.TableProxy import TableProxy
+from proxies.TableProxy import TableProxy
 from flask import Flask,current_app,Blueprint, request, g
 import routes
 import blueprints
@@ -25,11 +25,11 @@ def create_app(test_config=None):
         pass                    
     
     # Getting config options - this should eventually be in it's own class
-    SECRET_KEY = config('SECRET_KEY')
+    FLASK_SECRET_KEY = config('FLASK_SECRET_KEY')
     pss_db_type = config('pss_db_type',default='postgres')
     pss_db_name = config('pss_db_name')
-    pss_db_username = config('pss_db_username')
-    pss_db_password = config('pss_db_password')
+    pss_db_username = config('db_username')
+    pss_db_password = config('db_password')
 
     # The CORS module is needed because the backend runs on port 8000
     # and the html/javascript is retreived from port 80/443.  The CORS

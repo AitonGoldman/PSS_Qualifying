@@ -4,7 +4,7 @@
 #
 from sqlalchemy_utils import create_database, database_exists, drop_database as sql_utils_drop_database
 from flask_sqlalchemy import SQLAlchemy
-from lib.TableProxy import TableProxy
+from proxies.TableProxy import TableProxy
 
 POSTGRES_TYPE='postgres'
 SQLITE_TYPE='sqlite'
@@ -51,7 +51,7 @@ class DbHelper():
     # what it says on the tin
     def check_database_exists(self):        
         db_url = self.generate_db_url()
-        return database_exists(db_url):
+        return database_exists(db_url)
         
     # create_db_handle()
     #
