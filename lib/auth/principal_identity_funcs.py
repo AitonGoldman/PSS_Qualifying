@@ -18,5 +18,5 @@ def generate_pss_user_identity_loaded(app):
             identity.provides.add(needs.EventCreatorRoleNeed())
             for event in current_user.events_created:                
                 identity.provides.add(needs.EventEditNeed(event.event_id))
-                    
+                
     return on_identity_loaded

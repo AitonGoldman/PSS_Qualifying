@@ -7,3 +7,8 @@ sqlalchemy_utils
 python-decouple
 psycopg2
 flask-restless
+passlib
+flask-principal
+flask-login
+flask-marshmallow
+marshmallow-sqlalchemy

@@ -12,8 +12,8 @@ else:
 real_app = Flask('dummy')
 
 pss_db_type = config('pss_db_type',default='postgres')
-pss_db_username = config('pss_db_username')
-pss_db_password = config('pss_db_password')
+pss_db_username = config('db_username')
+pss_db_password = config('db_password')
 
 db_helper = DbHelper(pss_db_type,pss_db_username,pss_db_password,pss_db_name)
 db_helper.create_db_and_tables(real_app)

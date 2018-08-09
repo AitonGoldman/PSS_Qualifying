@@ -10,7 +10,9 @@ def generate_pss_users_class(db_handle):
         password_crypt = db_handle.Column(db_handle.String(134))
         has_picture = db_handle.Column(db_handle.Boolean(),default=False)
         push_token=db_handle.Column(db_handle.String(500))                
-        event_creator=db_handle.Column(db_handle.Boolean)            
+        event_creator=db_handle.Column(db_handle.Boolean)
+        
+        event_roles_for_user = db_handle.relationship('PssUsersEventRolesMappings',lazy="joined")
         
         def crypt_password(self, password):
             """Encrypt a plaintext password and store it"""

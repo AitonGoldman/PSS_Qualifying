@@ -7,3 +7,4 @@ PssNeedWithoutArgument = namedtuple('pss_route_need', ['method'])
 
 EventCreatorRoleNeed = partial(PssNeedWithoutArgument, roles_constants.EVENT_CREATOR)
 EventEditNeed = partial(PssNeedWithArgument, roles_constants.EVENT_CREATOR)
+
