@@ -71,6 +71,7 @@ def create_app(test_config=None):
     app.ma = Marshmallow(app)    
     app.table_proxy = TableProxy(db_handle,app)        
     app.config['DEBUG']=True
+    app.config['SECRET_KEY']=FLASK_SECRET_KEY
     return app
 
 def generate_extract_request_data(app):

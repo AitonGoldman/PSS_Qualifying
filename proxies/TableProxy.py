@@ -4,7 +4,7 @@ from proxies.EventSettingsProxy import EventSettingsProxy
 from proxies.PssUsersProxy import PssUsersProxy
 
 from models.EventSettingsAssociation import generate_event_settings_association_model
-from models.PssUsersEventRolesMappings import generate_pss_users_event_roles_mappings_class
+from models.PssUsersEventRolesMappings import generate_pss_users_event_roles_mappings_model
 
 from lib.serialization.PssUserSchema import gen_pss_users_schema
 from lib.serialization.PssEventsSchema import gen_events_schema
@@ -27,7 +27,7 @@ class TableProxy():
         self.events_proxy = EventsProxy(self.sqlAlchemyHandle)
         self.event_settings_proxy = EventSettingsProxy(self.sqlAlchemyHandle)
         self.event_roles =  EventRolesProxy(self.sqlAlchemyHandle)
-        self.pss_users_event_roles = generate_pss_users_event_roles_mappings_class(self.sqlAlchemyHandle)
+        self.pss_users_event_roles = generate_pss_users_event_roles_mappings_model(self.sqlAlchemyHandle)
         self.pss_users = PssUsersProxy(self.sqlAlchemyHandle,self.pssDeserializers)                
         self.event_settings_association = generate_event_settings_association_model(self.sqlAlchemyHandle)                  
         self.pssDeserializers.buildDeserializers()

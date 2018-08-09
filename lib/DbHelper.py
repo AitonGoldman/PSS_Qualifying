@@ -60,7 +60,7 @@ class DbHelper():
         flask_app.config['SQLALCHEMY_DATABASE_URI'] = self.generate_db_url()    
         flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         if debug:
-            app.config['SQLALCHEMY_ECHO']=True
+            flask_app.config['SQLALCHEMY_ECHO']=True
         db_handle = SQLAlchemy(flask_app)
         return db_handle
 
