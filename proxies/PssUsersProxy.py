@@ -1,10 +1,10 @@
 from models.PssUsers import generate_pss_users_model
 
 class PssUsersProxy():
-    def __init__(self,sqlAlchemyHandle,pssDeserializers=None):
+    def __init__(self,sqlAlchemyHandle,pssDeserializers,model=None):
         self.sqlAlchemyHandle = sqlAlchemyHandle
         self.pssDeserializers=pssDeserializers
-        self.pss_users_model = generate_pss_users_model(self.sqlAlchemyHandle)
+        self.pss_users_model = generate_pss_users_model(self.sqlAlchemyHandle) if model is None else model
 
     def get_pss_users(self):
         pass
@@ -18,10 +18,10 @@ class PssUsersProxy():
         else:
             query = self.pss_users_model.query.filter_by(pss_user_id=pss_user_id)
         pss_user = query.first()
-        if pss_user is None:
-            return None
         if serialized:
-            dict_to_return = self.pssDeserializers.pss_user_schema().dump(pss_user).data
+            if pss_user is None:
+                return None,None
+            dict_to_return = self.pssDeserializers.pss_user_schema.dump(pss_user).data            
             return pss_user,dict_to_return
         else:
             return pss_user

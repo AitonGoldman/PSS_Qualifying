@@ -12,3 +12,4 @@ flask-principal
 flask-login
 flask-marshmallow
 marshmallow-sqlalchemy
+mock

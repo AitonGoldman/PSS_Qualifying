@@ -15,10 +15,10 @@ class PssDeserializers():
         self.app = app
         self.table_proxy = table_proxy
         
-    def buildDeserializers(self):
-        self.pss_user_schema = gen_pss_users_schema(self.app,self.table_proxy)
-        self.events_schema = gen_events_schema(self.app,self.table_proxy)
-        self.event_roles_schema = gen_event_roles_schema(self.app,self.table_proxy)
+    def buildDeserializers(self):        
+        self.pss_user_schema = gen_pss_users_schema(self.app,self.table_proxy)        
+    #self.events_schema = gen_events_schema(self.app,self.table_proxy)
+    #self.event_roles_schema = gen_event_roles_schema(self.app,self.table_proxy)
     
 class TableProxy():
     def __init__(self, sqlAlchemyHandle, app):

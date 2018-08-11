@@ -6,4 +6,4 @@ class EventsProxy():
         self.event_model=generate_event_model(self.sqlAlchemyHandle)
         
     def get_events(self):        
-        return self.event_model.query.all() 
+        pass
