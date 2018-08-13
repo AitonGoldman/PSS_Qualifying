@@ -5,7 +5,7 @@ Flask-Cors
 gunicorn
 sqlalchemy_utils
 python-decouple
-psycopg2
+psycopg2-binary
 flask-restless
 passlib
 flask-principal
@@ -13,3 +13,5 @@ flask-login
 flask-marshmallow
 marshmallow-sqlalchemy
 mock
+SQLAlchemy-serializer
+pytest

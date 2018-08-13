@@ -75,7 +75,7 @@ class DbHelper():
         db_handle = self.create_db_handle(app)
         #if self.db_type == POSTGRES_TYPE:
         #    self.check_if_ranking_funcs_exists(db_handle)        
-        app.tables = TableProxy(db_handle)        
+        app.tables = TableProxy(db_handle,app)        
         self.create_tables(db_handle, drop_tables=drop_tables)
         db_handle.engine.dispose()                                                     
     

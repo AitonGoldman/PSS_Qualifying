@@ -20,8 +20,8 @@ class PssUsersProxy():
         pss_user = query.first()
         if serialized:
             if pss_user is None:
-                return None,None
-            dict_to_return = self.pssDeserializers.pss_user_schema.dump(pss_user).data            
+                return None,None            
+            dict_to_return = pss_user.to_dict()
             return pss_user,dict_to_return
         else:
             return pss_user

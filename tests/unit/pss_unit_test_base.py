@@ -18,15 +18,22 @@ class PssUnitTestBase(unittest.TestCase):
         #FIXME : need constants for these strings                        
         self.fake_app = Flask('poop')
         self.fake_app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+        #self.db_handle = SQLAlchemy(self.fake_app,session_options={"autoflush": False})
         self.db_handle = SQLAlchemy()
         self.fake_app.ma = Marshmallow(self.fake_app)
 
-        self.fake_pss_users_model = generate_pss_users_model(self.db_handle)
-        self.fake_pss_users_event_roles_model = generate_pss_users_event_roles_mappings_model(self.db_handle)        
-        self.fake_event_roles_model = generate_event_roles_model(self.db_handle)
-        self.fake_events_model = generate_event_model(self.db_handle)
-        self.fake_event_settings_model=generate_event_settings_model(self.db_handle)
-        self.fake_event_settings_association_model=generate_event_settings_association_model(self.db_handle)
+        self.fake_model_parent = type("FakeModelParent",
+                                      (self.db_handle.Model,),
+                                      {'fake_model_parent_id':self.db_handle.Column(self.db_handle.Integer,
+                                                                              primary_key=True),
+                                       'test_association':self.db_handle.relationship('FakeModelChild')})
+        self.fake_model_child = type("FakeModelChild",
+                                     (self.db_handle.Model,),
+                                     {'fake_model_child_id':self.db_handle.Column(self.db_handle.Integer,
+                                                                                  primary_key=True),
+                                      'fake_model_parent_id':self.db_handle.Column(self.db_handle.Integer,
+                                                                                   self.db_handle.ForeignKey('fake_model_parent.fake_model_parent_id'))
+                                     })
             
     def create_mock_user(self,role_names,is_pss_admin_user=True):
         mock_user = MagicMock()        

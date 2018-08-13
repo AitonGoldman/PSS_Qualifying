@@ -21,7 +21,6 @@ from lib.CustomJsonEncoder import CustomJSONEncoder
 from lib.DefaultJsonErrorHandler import make_json_error
 from json import loads
 from flask_marshmallow import Marshmallow
-from lib.serialization.PssUserSchema import gen_pss_users_schema
 
 def create_app(test_config=None):
     # create and configure the app
@@ -36,7 +35,7 @@ def create_app(test_config=None):
     # Getting config options - this should eventually be in it's own class
     FLASK_SECRET_KEY = config('FLASK_SECRET_KEY')
     pss_db_type = config('pss_db_type',default='postgres')
-    pss_db_name = config('pss_db_name')
+    pss_db_name = config('pss_db_name') if test_config is None else test_config['pss_db_name']
     pss_db_username = config('db_username')
     pss_db_password = config('db_password')
 
@@ -46,14 +45,14 @@ def create_app(test_config=None):
     # scripting errors when ajax requests are made.
     CORS(
         app,
-        headers=['Content-Type', 'Accept'],
+        allow_headers=['Content-Type', 'Accept'],
         vary_header=False,
         #send_wildcard=False,        
         supports_credentials=True
     )    
 
-    db_helper = DbHelper(pss_db_type,pss_db_username,pss_db_password,pss_db_name)    
-    db_handle = db_helper.create_db_handle(app)        
+    app.db_helper = DbHelper(pss_db_type,pss_db_username,pss_db_password,pss_db_name)    
+    db_handle = app.db_helper.create_db_handle(app)        
 
     LoginManager().init_app(app)
 
@@ -65,8 +64,8 @@ def create_app(test_config=None):
     app.json_encoder = CustomJSONEncoder            
     app.before_request(generate_extract_request_data(app))
 
-    app.error_handler_spec[None]={}
-    for code in default_exceptions.iterkeys():        
+    app.error_handler_spec[None]={}    
+    for code in default_exceptions:        
         app.register_error_handler(code, make_json_error)                            
     app.ma = Marshmallow(app)    
     app.table_proxy = TableProxy(db_handle,app)        

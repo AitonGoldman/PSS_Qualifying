@@ -7,8 +7,8 @@ from flask_principal import Permission
 
 def make_json_error(ex):
     """Turn an exception into a chunk of JSON"""
-    response = jsonify({})
-    response_dict = loads(response.get_data())
+    response = jsonify({})    
+    response_dict = loads(response.get_data(as_text=True))
     if hasattr(ex, 'state_go'):
         response_dict['state_go'] = ex.state_go
     if isinstance(ex, HTTPException):
