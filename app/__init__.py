@@ -13,6 +13,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from lib.DbHelper import DbHelper,POSTGRES_TYPE
 from decouple import config
+from lib.auth import principal_identity_funcs
+from flask_principal import Principal
+from flask_login import LoginManager
 from werkzeug.exceptions import default_exceptions
 from lib.CustomJsonEncoder import CustomJSONEncoder
 from lib.DefaultJsonErrorHandler import make_json_error
@@ -49,9 +52,16 @@ def create_app(test_config=None):
 
     app.db_helper = DbHelper(pss_db_type,pss_db_username,pss_db_password,pss_db_name)    
     db_handle = app.db_helper.create_db_handle(app)        
-        
+
+    LoginManager().init_app(app)
+
+    principals = Principal(app)    
+    principal_identity_funcs.generate_pss_user_loader(app)
+    principal_identity_funcs.generate_pss_user_identity_loaded(app)
+    
     app.register_blueprint(blueprints.event_bp)     
     app.json_encoder = CustomJSONEncoder                
+    app.before_request(generate_extract_request_data(app))
 
     app.error_handler_spec[None]={}    
     for code in default_exceptions:        
@@ -61,3 +71,10 @@ def create_app(test_config=None):
     app.config['SECRET_KEY']=FLASK_SECRET_KEY
     return app
 
+def generate_extract_request_data(app):
+    def extract_request_data():
+        if request.data:
+            g.request_data=loads(request.get_data(as_text=True))
+        else:
+            g.request_data = {}
+    return extract_request_data
