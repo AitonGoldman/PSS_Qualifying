@@ -11,10 +11,6 @@ class IntegrationTestEvents(unittest.TestCase):
     def test_get_event(self):                
         client = self.app.test_client()
         event_instance = self.app.table_proxy.events_proxy.event_model(event_id=1,event_name='test_event')
-        event_setting_instance = self.app.table_proxy.event_settings_proxy.event_settings_model(event_setting_id=1,event_setting_name='test_setting')        
-        event_settings_mapping_instance = self.app.table_proxy.event_settings_association(extra_data='poop')
-        event_settings_mapping_instance.event_setting=event_setting_instance
-        event_instance.event_settings_values = [event_settings_mapping_instance]        
         self.app.table_proxy.sqlAlchemyHandle.session.add(event_instance)
         self.app.table_proxy.commit_changes()
         rv = client.get('/event/1')
