@@ -20,6 +20,8 @@ from werkzeug.exceptions import default_exceptions
 from lib.CustomJsonEncoder import CustomJSONEncoder
 from lib.DefaultJsonErrorHandler import make_json_error
 from json import loads
+from flask_marshmallow import Marshmallow
+from flask_restless.helpers import to_dict
 
 def create_app(test_config=None):
     # create and configure the app
@@ -66,15 +68,16 @@ def create_app(test_config=None):
     app.error_handler_spec[None]={}    
     for code in default_exceptions:        
         app.register_error_handler(code, make_json_error)                                
+    app.ma = Marshmallow(app)    
     app.table_proxy = TableProxy(db_handle,app)        
     app.config['DEBUG']=True
     app.config['SECRET_KEY']=FLASK_SECRET_KEY
     return app
 
 def generate_extract_request_data(app):
-    def extract_request_data():
-        if request.data:
+    def extract_request_data():                
+        if request.data:            
             g.request_data=loads(request.get_data(as_text=True))
-        else:
-            g.request_data = {}
+        else:            
+            g.request_data = {'poop':'shoop'}
     return extract_request_data

@@ -12,11 +12,11 @@ def generate_pss_user_identity_loaded(app):
     @identity_loaded.connect_via(app)
     def on_identity_loaded(sender, identity):
         """Set up the Flask-Principal stuff for this user"""
-        if current_user.is_anonymous():
+        if current_user.is_anonymous():            
             return
         if current_user.event_creator:
             identity.provides.add(needs.EventCreatorRoleNeed())
-            for event in current_user.events_created:
-                identity.provides.add(needs.EventEditNeed(event.event_id))
+            # for event in current_user.events_created:
+            #     identity.provides.add(needs.EventEditNeed(event.event_id))
 
     return on_identity_loaded
