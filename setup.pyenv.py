@@ -14,3 +14,10 @@ subprocess.call([
    '-e',
    'git+http://github.com/russ-/pychallonge#egg=pychallonge'
 ])
+
+subprocess.call([
+   'pip',
+   'install',
+   '-e',
+   'git+http://github.com/AitonGoldman/marshmallow-sqlalchemy#egg=marshmallow-sqlalchemy'
+])
