@@ -6,6 +6,7 @@ from sqlalchemy_utils import create_database, database_exists, drop_database as 
 from flask_sqlalchemy import SQLAlchemy
 from proxies.TableProxy import TableProxy
 
+
 POSTGRES_TYPE='postgres'
 SQLITE_TYPE='sqlite'
 
@@ -61,7 +62,7 @@ class DbHelper():
         flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         if debug:
             flask_app.config['SQLALCHEMY_ECHO']=True
-        db_handle = SQLAlchemy(flask_app)
+        db_handle = SQLAlchemy(flask_app)        
         return db_handle
 
     # create_db_and_tables

@@ -7,7 +7,7 @@ from lib.auth import permissions
 def create_event(table_proxy,event_dict):
     if table_proxy.events_proxy.get_event(serialized=False,event_name=event_dict.get('event_name',None)):
         raise BadRequest('Event by that name already exists')
-    event = current_app.table_proxy.events_proxy.create_event(event_dict, serialized=False)
+    event = current_app.table_proxy.events_proxy.create_event(event_dict, serialized=False)    
     if event is None:
         raise NotFound("Could not create event with configuration options submitted")
     table_proxy.commit_changes()
@@ -20,6 +20,7 @@ def create_event_route():
         raise Unauthorized('You are not authorized to create an event')
     dict_to_return = create_event(current_app.table_proxy,g.request_data)
     return jsonify({'data':dict_to_return})
+    
 
 @event_bp.route('/event_template', methods=["GET"])
 def get_event_template_route():

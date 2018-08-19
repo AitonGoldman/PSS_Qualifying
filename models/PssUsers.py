@@ -2,7 +2,7 @@ from passlib.hash import sha512_crypt
 from sqlalchemy_serializer import SerializerMixin
 
 def generate_pss_users_model(db_handle):
-    class PssUsers(db_handle.Model,SerializerMixin):
+    class PssUsers(db_handle.Model, SerializerMixin):
         pss_user_id = db_handle.Column(db_handle.Integer, primary_key=True)
         username = db_handle.Column(db_handle.String(80), unique=True, nullable=False)
         first_name = db_handle.Column(db_handle.String(80), nullable=False)
