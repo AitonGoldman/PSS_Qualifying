@@ -6,7 +6,7 @@ import os,sys
 if len(sys.argv) > 1:
     pss_db_name=sys.argv[1]    
 else:
-    print "didn't specify db name..."
+    print("didn't specify db name...")
     sys.exit(1)
 
 real_app = Flask('dummy')
