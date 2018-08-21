@@ -1,7 +1,7 @@
 # Setup and Installation
 
 ## Pre-reqs (Estimated time to complete : 10-15 minutes)
-- [Download an existing VirtualBox image](VirtualBoxAppliance.md) OR [Create and configure the VM on your own] (CreateVmFromScratch.md) 
+- [Download an existing VirtualBox image](VirtualBoxAppliance.md) OR [Create and configure the VM on your own](CreateVmFromScratch.md) 
 - On the VM...
  - Activate the python environment 
    - `pyenv activate pss_venv`
