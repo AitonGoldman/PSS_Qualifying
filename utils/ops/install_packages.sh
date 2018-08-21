@@ -7,4 +7,5 @@ do
 done
 sudo -u postgres psql template1 -c "create user tom"
 sudo -u postgres psql template1 -c "alter user tom with password 'tom_password'"
+sudo -u postgres psql template1 -c "alter user tom with SUPERUSER"
 

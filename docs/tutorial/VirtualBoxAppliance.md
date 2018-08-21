@@ -1,0 +1,14 @@
+# Using an existing VirtualBox appliance 
+- Get the latest version of VirtualBox
+- Get the VirtualBox appliance ( a prepackaged VirtualBox VM) from []() 
+- Add a shared folder to the VM
+  -  Follow the instructions here : https://www.youtube.com/watch?v=89HDKvTfR_w
+  -  This directory is shared between your guest and host OS
+- Start the VM
+- The login and password for the VM is : username : `pinball`, password : `pinball`
+- Login to the VM and look in `/media` 
+  - You will see a directory that has the same name as the shared folder you created - this directory is shared between your guest and host OS
+- Goto the shared folder directory under '/media' and clone the PSS_Qualifying repo
+  - `git clone https://github.com/AitonGoldman/PSS_Qualifying.git`
+- add forwarded port to virtual box - this will let you reach the server from your host OS
+  - ???
