@@ -25,12 +25,7 @@ When running commands using sudo, it will ask you for a password.  Give the pass
 - Goto the shared folder directory under '/media' and clone the PSS_Qualifying repo
   - `git clone https://github.com/AitonGoldman/PSS_Qualifying.git`
 - Run the package install script to install all needed packages 
-  - `cd PSS_Qualifying; bash utils/ops/install_packages.sh`
-- Run the pyenv initialization script to install pyenv and python 3 
-  - `source utils/ops/initialize_pyenv_environment.sh`
-  - `pyenv` allows you to easily manage (and switch between) multiple versions of python
-  - After running the pyenv initialization script, it will ask you to add 2 lines to your bashrc or bash_profile.  Do it
-  - Logout and log back into the VM
+  - `cd PSS_Qualifying; bash utils/ops/install_packages_for_vm.sh`
 - Add the following to your .bashrc in the VM  and source your .bashrc
  ```
    export pss_db_name=test
@@ -38,14 +33,9 @@ When running commands using sudo, it will ask you for a password.  Give the pass
    export db_password=tom_password
    export FLASK_SECRET_KEY=fake_key
  ```
-- Activate the python environment 
-  - `pyenv activate pss_venv`
 - run setup.py in top level directory of PSS_Qualifying - this will install all the needed Python packages
   - `python setup.pyenv.py` 
 - run populate script
   - `PYTHONPATH=. python utils/populate/create_db.py test`
-- create alias for `gunicorn` to pyenv dir - `gunicorn` is needed for running the PSS server
-  - `alias gunicorn=``pyenv prefix``/bin/gunicorn`
-  - add the alias command to your .bashrc
 - add forwarded port to virtual box - this will let you reach the server from your host OS
   - ???
