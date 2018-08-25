@@ -19,15 +19,15 @@ Before we start the tutorial, let's try using the skeleton to get information ab
 ```
 PYTHONPATH=. gunicorn -b 0.0.0.0:8000 'test_app:app' -w $1 --reload
 ```  
-You have now started the PSS_Qualifying server.  At the moment it is not neccessary for you to understand what the gunicorn command does or what the arguments to it are - but if you want to learn more you can look at the comments in `app/__init__.py` and `test_app/__init__.py` 
- 
-In order to use the PSS_Qualifying server to get the info for an existing event in the database, hit the url `http://0.0.0.0:8000/event/1` (in a seperate shell with `curl` or through your webbrowser) and you will get a result that looks like : 
+You have now started the PSS_Qualifying server.   In order to use the PSS_Qualifying server to get the info for an existing event in the database, hit the url `http://0.0.0.0:8000/event/1` (in a seperate shell with `curl` or through your webbrowser) and you will get the event info that looks like this : 
 ```
 {
   event_id:1,
   event_name:"test"
 }
 ```
+
+A quick explanation of what just happened : Gunicorn is a WSGI HTTP Server - which means it will handle accepting incoming HTTP requests.  Gunicorn needs to be told where the code is that will handle processing HTTP requests - the `test_app:app` argument points gunicorn to the Flask object that is configured by our code ( this configuration will be covered in the `Event Route` section below ).  When you hit the `http://0.0.0.0:8000/event/1` url, the Flask object handles routing the request to the appropriate code that processes the request. 
 
 The rest of this document covers how information is stored in the database, how that information is accessed by the PSS_Qualifying code, and how that information gets requested by (and returned to) users.    
 
@@ -97,6 +97,12 @@ There are two things to notice here :
 - Serialization happens at the EventProxy level, not at the business logic level
 - The function allows for choosing whether or not to return a serialized version of the event retrieved.  The reason for this is because this function could be called from other EventProxy functions and from business logic code.  We don't want to waste time serializing if another EventProxy function is calling `get_event()`.  But if it is being called by business logic code we always want to return a serialized version of the event found, because this serialized version is what will eventually make it to the user. 
 
+Now let's look at how the `TableProxy` and `EventsProxy` code gets called.
+
 ## Event route
 
+Flask requires route decroraters to define endpoints (i.e. url you hit in quick demo).  show event endpoint.  explain blueprints, url definition with arguments.  explain current_app, how code in `app/__init__.py` imports the routes, initializes tableproxy, serializes, handles bad input
 
+## Unit and Integration tests
+
+## Next Steps
