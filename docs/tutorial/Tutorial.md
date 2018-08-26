@@ -15,11 +15,11 @@ Please see the architecture document [here](../arch/README.md) before continuing
 The code in this branch will be a minimum skeleton to demonstrate how PSS_Qualifying works.  The skeleton has implemented one feature : allowing users to get information about a specific `Event`. This tutorial use the skeleton to introduce you to the PSS_Qualifying code structure and how it works.
 
 ## A quick demo
-Before we start the tutorial, let's try using the skeleton to get information about an event.  We do this by running the following command at the top level of the PSS_Qualifying repo : 
+Before we start the tutorial, let's try using the skeleton to get information about the event that was inserted into the database by the bootstrapping script.  We do this by running the following command at the top level of the PSS_Qualifying repo : 
 ```
 PYTHONPATH=. gunicorn -b 0.0.0.0:8000 'test_app:app' -w $1 --reload
 ```  
-You have now started the PSS_Qualifying server.   In order to use the PSS_Qualifying server to get the info for an existing event in the database, hit the url `http://0.0.0.0:8000/event/1` (in a seperate shell with `curl` or through your webbrowser) and you will get the event info that looks like this : 
+You have now started the PSS_Qualifying server.   In order to use the PSS_Qualifying server to get the info for the existing event in the database, hit the url `http://0.0.0.0:8000/event/1` (in a seperate shell with `curl` or through your webbrowser) and you will get the event info that looks like this : 
 ```
 {
   event_id:1,
@@ -101,7 +101,34 @@ Now let's look at how the `TableProxy` and `EventsProxy` code gets called.
 
 ## Event route
 
-Flask requires route decroraters to define endpoints (i.e. url you hit in quick demo).  show event endpoint.  explain blueprints, url definition with arguments.  explain current_app, how code in `app/__init__.py` imports the routes, initializes tableproxy, serializes, handles bad input
+Flask requires you to define `routes` that Flask uses to map a request to the code that will process the request ( see here for more details).  All routes for PSS_Qualifying get defined under the `routes` directory.  The route defined in `routes/event.py` handled the request we made in the `Quick demo` section of this tutorial.  Let's take a look at `routes/event.py`:
+
+```
+from blueprints import event_bp
+from flask import current_app,jsonify
+from flask_restless.helpers import to_dict
+from werkzeug.exceptions import BadRequest, Unauthorized, NotFound
+
+def get_event(table_proxy):
+    return event, dict_to_return = table_proxy.events_proxy.get_event(event_id=event_id)
+    if event is None:
+        raise NotFound("Invalid event id")
+    return dict_to_return
+    
+@event_bp.route('/event/<int:event_id>', methods=["GET"])
+def get_event_route(event_id):                    
+    dict_to_return = get_event(current_app.table_proxy) 
+    return jsonify({'data':dict_to_return}) 
+
+```
+
+The decorator for `get_event_route()` tells Flask which url maps to which method for processing.  The `event_bp` part of the decorator is a Flask blueprint (see here for more details), and the `route()` method is what tells Flask that any request url that matches `/event/<int>` (where `<int>` is an integer) should use `get_event_route()` to process the request.
+
+All Flask blueprints for PSS_Qualifying are defined in the `blueprints` directory.  For more information about how PSS_Qualifying uses blueprints, see `blueprints/README.md`.
+
+`get_event_route()` calls `get_event()` which actually uses the `EventsProxy` via the `TableProxy` to retrieve the event by it's event_id.  
+
+decroraters to define endpoints (i.e. url you hit in quick demo).  show event endpoint.  explain blueprints, url definition with arguments.  explain current_app, how code in `app/__init__.py` imports the routes, initializes tableproxy, serializes, handles bad input
 
 ## Unit and Integration tests
 
