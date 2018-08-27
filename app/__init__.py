@@ -30,33 +30,23 @@ def create_app(test_config=None):
     
     # Getting config options - this should eventually be in it's own class
     FLASK_SECRET_KEY = config('FLASK_SECRET_KEY')
-    pss_db_type = config('pss_db_type',default='postgres')
-    pss_db_name = config('pss_db_name') if test_config is None else test_config['pss_db_name']
-    pss_db_username = config('db_username')
-    pss_db_password = config('db_password')
+    app.config['SECRET_KEY']=FLASK_SECRET_KEY
+    
+    db_name = config('pss_db_name') if test_config is None else test_config['pss_db_name']
+    db_username = config('db_username')
+    db_password = config('db_password')
+    
+    db_url="postgresql://%s:%s@localhost/%s" % (db_username,db_password,db_name)
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 
-    # The CORS module is needed because the backend runs on port 8000
-    # and the html/javascript is retreived from port 80/443.  The CORS
-    # module makes sure the browser/native app doesn't puke with cross site
-    # scripting errors when ajax requests are made.
-    CORS(
-        app,
-        allow_headers=['Content-Type', 'Accept'],
-        vary_header=False,
-        #send_wildcard=False,        
-        supports_credentials=True
-    )    
-
-    app.db_helper = DbHelper(pss_db_type,pss_db_username,pss_db_password,pss_db_name)    
-    db_handle = app.db_helper.create_db_handle(app)        
+    SQLAlchemy_handle = SQLAlchemy(app)
+    app.table_proxy = TableProxy(SQLAlchemy_handle,app)        
         
     app.register_blueprint(blueprints.event_bp)     
-    app.json_encoder = CustomJSONEncoder                
+    #app.json_encoder = CustomJSONEncoder                
 
     app.error_handler_spec[None]={}    
     for code in default_exceptions:        
         app.register_error_handler(code, make_json_error)                                
-    app.table_proxy = TableProxy(db_handle,app)        
-    app.config['DEBUG']=True
-    app.config['SECRET_KEY']=FLASK_SECRET_KEY
+    app.config['DEBUG']=True    
     return app

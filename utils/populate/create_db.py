@@ -17,6 +17,9 @@ pss_db_password = config('db_password')
 
 db_helper = DbHelper(pss_db_type,pss_db_username,pss_db_password,pss_db_name)
 db_helper.create_db_and_tables(real_app)
+new_event = real_app.tables.event_proxy.event_model(event_name='test_event')
+real_app.tables.sqlAlchemyHandle.session.add(new_event)
+real_app.tables.commit_changes()
 
 # pss_config.get_db_info().create_db_and_tables(real_app,True)
 # db_handle = pss_config.get_db_info().create_db_handle(real_app)
