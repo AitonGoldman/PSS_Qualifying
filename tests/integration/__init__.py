@@ -12,6 +12,5 @@ def static_setup():
     global app,test_db_name_for_run,PSS_ADMIN_EVENT,pss_config    
     if app is None:
         app = create_app({'pss_db_name':test_db_name_for_run})         
-        db_helper = DbHelper(POSTGRES_TYPE,os.environ['db_username'],os.environ['db_password'],test_db_name_for_run)
-        db_helper.create_db_and_tables(app)
+        app.db_helper.create_db_and_tables(app)
     return app

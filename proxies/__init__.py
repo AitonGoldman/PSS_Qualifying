@@ -1,1 +1,3 @@
+class TableProxyError(Exception):
+    pass
  

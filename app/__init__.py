@@ -13,10 +13,15 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from lib.DbHelper import DbHelper,POSTGRES_TYPE
 from decouple import config
+from lib.auth import principal_identity_funcs
+from flask_principal import Principal
+from flask_login import LoginManager
 from werkzeug.exceptions import default_exceptions
 from lib.CustomJsonEncoder import CustomJSONEncoder
 from lib.DefaultJsonErrorHandler import make_json_error
 from json import loads
+from flask_marshmallow import Marshmallow
+from flask_restless.helpers import to_dict
 
 def create_app(test_config=None):
     # create and configure the app
@@ -30,23 +35,49 @@ def create_app(test_config=None):
     
     # Getting config options - this should eventually be in it's own class
     FLASK_SECRET_KEY = config('FLASK_SECRET_KEY')
-    app.config['SECRET_KEY']=FLASK_SECRET_KEY
-    
-    db_name = config('pss_db_name') if test_config is None else test_config['pss_db_name']
-    db_username = config('db_username')
-    db_password = config('db_password')
-    
-    db_url="postgresql://%s:%s@localhost/%s" % (db_username,db_password,db_name)
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+    pss_db_type = config('pss_db_type',default='postgres')
+    pss_db_name = config('pss_db_name') if test_config is None else test_config['pss_db_name']
+    pss_db_username = config('db_username')
+    pss_db_password = config('db_password')
 
-    SQLAlchemy_handle = SQLAlchemy(app)
-    app.table_proxy = TableProxy(SQLAlchemy_handle,app)        
-        
+    # The CORS module is needed because the backend runs on port 8000
+    # and the html/javascript is retreived from port 80/443.  The CORS
+    # module makes sure the browser/native app doesn't puke with cross site
+    # scripting errors when ajax requests are made.
+    CORS(
+        app,
+        allow_headers=['Content-Type', 'Accept'],
+        vary_header=False,
+        #send_wildcard=False,        
+        supports_credentials=True
+    )    
+
+    app.db_helper = DbHelper(pss_db_type,pss_db_username,pss_db_password,pss_db_name)    
+    db_handle = app.db_helper.create_db_handle(app)        
+
+    LoginManager().init_app(app)
+
+    principals = Principal(app)    
+    principal_identity_funcs.generate_pss_user_loader(app)
+    principal_identity_funcs.generate_pss_user_identity_loaded(app)
+    
     app.register_blueprint(blueprints.event_bp)     
-    #app.json_encoder = CustomJSONEncoder                
+    app.json_encoder = CustomJSONEncoder                
+    app.before_request(generate_extract_request_data(app))
 
     app.error_handler_spec[None]={}    
     for code in default_exceptions:        
         app.register_error_handler(code, make_json_error)                                
-    app.config['DEBUG']=True    
+    app.ma = Marshmallow(app)    
+    app.table_proxy = TableProxy(db_handle,app)        
+    app.config['DEBUG']=True
+    app.config['SECRET_KEY']=FLASK_SECRET_KEY
     return app
+
+def generate_extract_request_data(app):
+    def extract_request_data():                
+        if request.data:            
+            g.request_data=loads(request.get_data(as_text=True))
+        else:            
+            g.request_data = {'poop':'shoop'}
+    return extract_request_data
