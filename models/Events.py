@@ -1,5 +1,7 @@
+from sqlalchemy_serializer import SerializerMixin
+
 def generate_event_model(db):
-    class Events(db.Model):
+    class Events(db.Model,SerializerMixin):
         event_id = db.Column(db.Integer, primary_key=True)
         event_name = db.Column(db.String(80), unique=True, nullable=False)                
         

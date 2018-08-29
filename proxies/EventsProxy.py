@@ -1,5 +1,4 @@
 from models.Events import generate_event_model
-from flask_restless.helpers import to_dict
 
 class EventsProxy():
     def __init__(self,                 
@@ -12,8 +11,8 @@ class EventsProxy():
         event = self.event_model.query.filter_by(event_id=event_id).first()
         if serialized:
             if event is None:
-                return None,None            
-            dict_to_return = to_dict(event)            
+                return None,None                        
+            dict_to_return = event.to_dict()
             return event,dict_to_return
         else:
             return event 

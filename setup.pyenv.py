@@ -1,15 +1,14 @@
 """Set up your virtual environment for development"""
 import os, subprocess
-from distutils import spawn
 
 subprocess.call([
-   'pip',
+   'pip3',
    'install',
    '-r',
    'requirements.txt'
 ])
 subprocess.call([
-   'pip',
+   'pip3',
    'install',
    '-e',
    'git+http://github.com/russ-/pychallonge#egg=pychallonge'

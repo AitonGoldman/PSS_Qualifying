@@ -24,6 +24,7 @@ When running commands using sudo, it will ask you for a password.  Give the pass
   - You will see a directory that has the same name as the shared folder you created - this directory is shared between your guest and host OS
 - Goto the shared folder directory under '/media' and clone the PSS_Qualifying repo
   - `git clone https://github.com/AitonGoldman/PSS_Qualifying.git`
+  - You can now use an editor on your host OS to edit the PSS_Qualifying files
 - Run the package install script to install all needed packages 
   - `cd PSS_Qualifying; bash utils/ops/install_packages_for_vm.sh`
 - Add the following to your .bashrc in the VM  and source your .bashrc
@@ -34,8 +35,13 @@ When running commands using sudo, it will ask you for a password.  Give the pass
    export FLASK_SECRET_KEY=fake_key
  ```
 - run setup.py in top level directory of PSS_Qualifying - this will install all the needed Python packages
-  - `python setup.pyenv.py` 
+  - `python3 setup.pyenv.py` 
 - run populate script
-  - `PYTHONPATH=. python utils/populate/create_db.py test`
+  - `PYTHONPATH=. python3 utils/populate/create_db.py test`
 - add forwarded port to virtual box - this will let you reach the server from your host OS
-  - ???
+  - For the vm, click on the "settings" button
+  - under network -> adapter 1, expand the "advanced" options and click the "Port Forwarding" button
+  - click on the "plus" icon on the right of the dialog
+  - in the new row in the table, enter "8000" into "host port" field and enter "8000" into the "guest port" field
+  - click the ok button
+  - Now if you run the PSS_Qualifying server on port 8000 in the vm (which is the default), it will be available via port 8000 on the host

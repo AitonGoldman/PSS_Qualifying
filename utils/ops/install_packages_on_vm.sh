@@ -1,12 +1,8 @@
 set -e
+add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) main universe"
 source ./utils/ops/list_of_packages_to_install.sh
 apt-get update
 for i in ${LIST_OF_PACKAGES[@]}
-do
-    apt-get --allow-downgrades --force-yes install $i    
-done
-
-for i in ${LIST_OF_PACKAGES_VM[@]}
 do
     apt-get --allow-downgrades --force-yes install $i    
 done
