@@ -15,3 +15,4 @@ marshmallow-sqlalchemy
 mock
 SQLAlchemy-serializer
 pytest
+sphinx
