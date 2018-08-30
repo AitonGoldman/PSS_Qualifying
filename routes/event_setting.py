@@ -1,6 +1,5 @@
 from blueprints import event_bp
 from flask import current_app,jsonify, g
-from flask_restless.helpers import to_dict
 from werkzeug.exceptions import BadRequest, Unauthorized, NotFound
 from lib.auth import permissions
 from proxies import TableProxyError
@@ -11,8 +10,9 @@ def create_event_setting(table_proxy,event_setting_dict):
     try:
         event_setting = table_proxy.event_settings_proxy.create_event_setting(event_setting_dict['event_setting_name'], serialized=False)
     except TableProxyError as e:
+        #TODO : need a problem error handler here
         raise BadRequest(e)
-    
+    #TODO : will event_setting ever be none?
     if event_setting is None:
         raise NotFound("Could not create event setting with configuration options submitted")
     table_proxy.commit_changes()
@@ -20,10 +20,7 @@ def create_event_setting(table_proxy,event_setting_dict):
 
 @event_bp.route('/event_setting', methods=["POST"])
 def create_event_setting_route():                    
-    #event_create_permission = permissions.EventCreatorPermission()
-    #if not event_create_permission.can():                
-    #    raise Unauthorized('You are not authorized to create an event')
-    
+    #TODO : remove this
     dict_to_return = create_event_setting(current_app.table_proxy,g.request_data)    
     return jsonify({'data':dict_to_return})
     

@@ -10,14 +10,12 @@ class EventsProxyTest(PssUnitTestBase):
         self.event_model_mock = MagicMock()
         self.table_proxy_mock = MagicMock()
         self.event_settings_model_mock = MagicMock()
-        self.event_model_associations_mock = MagicMock()
-        self.deserializer_mock = MagicMock()                
+        self.event_model_associations_mock = MagicMock()        
     
     def test_get_event_with_invalid_event_id(self):                        
         self.event_model_mock.query.filter_by().first.return_value=None
         self.events_proxy = EventsProxy(self.db_handle_mock,
-                                        self.table_proxy_mock,
-                                        self.deserializer_mock,
+                                        self.table_proxy_mock,                                        
                                         event_model=self.event_model_mock)
         event,event_dict = self.events_proxy.get_event(event_id=1)
         self.assertEqual(event,None)
@@ -29,8 +27,7 @@ class EventsProxyTest(PssUnitTestBase):
         self.mock_event.to_dict.return_value=test_dict
         self.event_model_mock.query.filter_by().first.return_value=self.mock_event
         self.events_proxy = EventsProxy(self.db_handle_mock,
-                                        self.table_proxy_mock,
-                                        self.deserializer_mock,
+                                        self.table_proxy_mock,                                        
                                         event_model=self.event_model_mock)
         event,event_dict = self.events_proxy.get_event(event_id=1)
         self.assertEqual(event,self.mock_event)
@@ -43,8 +40,7 @@ class EventsProxyTest(PssUnitTestBase):
         self.mock_event.to_dict.return_value=test_dict
         self.event_model_mock.query.filter_by().first.return_value=self.mock_event
         self.events_proxy = EventsProxy(self.db_handle_mock,
-                                        self.table_proxy_mock,
-                                        self.deserializer_mock,
+                                        self.table_proxy_mock,                                        
                                         event_model=self.event_model_mock)
         event,event_dict = self.events_proxy.get_event(event_name='test_event')
         self.assertEqual(event,self.mock_event)
@@ -54,17 +50,17 @@ class EventsProxyTest(PssUnitTestBase):
 
     def test_create_event_simple(self):        
         test_dict = {'event_name':'test_event'}                
-        self.mock_event.data.to_dict.return_value=test_dict
-        self.deserializer_mock.event_schema.load.return_value=self.mock_event
+        mock_event = MagicMock()
+        mock_event.data.to_dict.return_value=test_dict        
+        self.table_proxy_mock.pssDeserializers.event_schema.deserialize.return_value=self.mock_event
         self.events_proxy = EventsProxy(self.db_handle_mock,
-                                        self.table_proxy_mock,
-                                        self.deserializer_mock,
+                                        self.table_proxy_mock,                                        
                                         event_model=self.event_model_mock)
         event,event_dict = self.events_proxy.create_event(test_dict)
         self.assertEqual(event,self.mock_event.data)
-        self.deserializer_mock.event_schema.load.assert_called_with(test_dict)        
+        self.table_proxy_mock.pssDeserializers.event_schema.deserialize.assert_called_with(test_dict)        
         self.mock_event.data.to_dict.assert_called()
-        self.db_handle_mock.session.add.assert_called_with(self.mock_event.data)
+        self.events_proxy.sqlAlchemyHandle.session.add.assert_called_with(self.mock_event.data)
 
     #TODO
     def test_create_event_complex(self):        

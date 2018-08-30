@@ -25,6 +25,7 @@ class EventSettingsProxy():
         else:
             return event_setting
         
+    #TODO : abstract this out to a external script
     def create_event_setting(self,event_setting_name,serialized=True):
         event_setting_name_segments = event_setting_name.split("_")
         if len(event_setting_name_segments)==0:

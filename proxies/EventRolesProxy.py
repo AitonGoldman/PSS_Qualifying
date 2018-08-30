@@ -4,6 +4,7 @@ class EventRolesProxy():
     def __init__(self,sqlAlchemyHandle):                
         self.sqlAlchemyHandle = sqlAlchemyHandle
         self.event_roles_model = generate_event_roles_model(self.sqlAlchemyHandle)
-        
+
+    #TODO : implement 
     def get_event_roles(self):        
         pass        

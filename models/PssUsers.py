@@ -25,8 +25,7 @@ def generate_pss_users_model(db_handle):
             else:
                 return sha512_crypt.verify(password, self.password_crypt)
 
-        def __repr__(self):
-            #return '<User %r>' % self.username
+        def __repr__(self):            
             existing_user_name = self.first_name+" "+self.last_name
             if self.extra_title:
                 existing_user_name = existing_user_name + " " + self.extra_title

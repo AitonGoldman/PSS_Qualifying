@@ -16,7 +16,8 @@ def generate_pss_user_identity_loaded(app):
             return
         if current_user.event_creator:
             identity.provides.add(needs.EventCreatorRoleNeed())
-            # for event in current_user.events_created:
-            #     identity.provides.add(needs.EventEditNeed(event.event_id))
+            
+            for event in app.table_proxy.events_proxy.get_events_created_by_user(current_user.pss_user_id,serialized=False):
+                identity.provides.add(needs.EventEditNeed(event.event_id))
 
     return on_identity_loaded

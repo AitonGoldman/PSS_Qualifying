@@ -1,8 +1,4 @@
-# DbHelper.py
-#
-# What it says on the tin.  Helper class for dealing with the database.  
-#
-from sqlalchemy_utils import create_database, database_exists, drop_database as sql_utils_drop_database
+from sqlalchemy_utils import create_database, database_exists
 from flask_sqlalchemy import SQLAlchemy
 from proxies.TableProxy import TableProxy
 
@@ -10,9 +6,6 @@ from proxies.TableProxy import TableProxy
 POSTGRES_TYPE='postgres'
 SQLITE_TYPE='sqlite'
 
-# DbHelper
-#
-# Arguments to the class __init__() are everything needed to connect to a db 
 class DbHelper():    
     def __init__(self,
                  db_type,
@@ -37,9 +30,6 @@ class DbHelper():
         else:
             self.db_host='localhost'
 
-    # generate_db_url
-    #
-    # generate a sqlalchemy connection url based on info the DbHelper has
     def generate_db_url(self):
         if self.db_type == SQLITE_TYPE:
             db_url= "sqlite:////tmp/%s.db" % self.db_name    
@@ -47,16 +37,10 @@ class DbHelper():
             db_url="postgresql://%s:%s@localhost/%s" % (self.db_username,self.db_password,self.db_name)
         return db_url
 
-    # check_database_exists()
-    #
-    # what it says on the tin
     def check_database_exists(self):        
         db_url = self.generate_db_url()
         return database_exists(db_url)
         
-    # create_db_handle()
-    #
-    # creates a SQLAlchemy instance based on info the DbHelper has, and returns it
     def create_db_handle(self,flask_app,debug=False):
         flask_app.config['SQLALCHEMY_DATABASE_URI'] = self.generate_db_url()    
         flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -65,10 +49,6 @@ class DbHelper():
         db_handle = SQLAlchemy(flask_app)        
         return db_handle
 
-    # create_db_and_tables
-    #
-    # creates the database based on the database_name member of the class
-    # and then creates the tables based on Models that TableProxy knows about
     def create_db_and_tables(self, app, drop_tables=False):            
         db_url = self.generate_db_url()                
         if not database_exists(db_url):
@@ -76,7 +56,7 @@ class DbHelper():
         db_handle = self.create_db_handle(app)
         #if self.db_type == POSTGRES_TYPE:
         #    self.check_if_ranking_funcs_exists(db_handle)        
-        app.tables = TableProxy(db_handle,app)        
+        app.table_proxy = TableProxy(db_handle,app)        
         self.create_tables(db_handle, drop_tables=drop_tables)
         db_handle.engine.dispose()                                                     
     

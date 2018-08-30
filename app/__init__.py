@@ -1,17 +1,9 @@
-# app module
-#
-# Defines a method create_app() that generates a Flask instance, configures it, and returns it. 
-#
-# gunicorn calls create_app() and uses the generated Flask instance.
-
 import os
-from proxies.TableProxy import TableProxy
-from flask import Flask,current_app,Blueprint, request, g
+from flask import Flask, request, g
 import routes
 import blueprints
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-from lib.DbHelper import DbHelper,POSTGRES_TYPE
+from lib.DbHelper import DbHelper
 from decouple import config
 from lib.auth import principal_identity_funcs
 from flask_principal import Principal
@@ -21,13 +13,10 @@ from lib.CustomJsonEncoder import CustomJSONEncoder
 from lib.DefaultJsonErrorHandler import make_json_error
 from json import loads
 from flask_marshmallow import Marshmallow
-from flask_restless.helpers import to_dict
 
-def create_app(test_config=None):
-    # create and configure the app
+def create_app(test_config=None):    
     app = Flask(__name__, instance_relative_config=True)    
-    
-    # ensure the instance folder exists
+        
     try:
         os.makedirs(app.instance_path)
     except OSError:
@@ -68,8 +57,7 @@ def create_app(test_config=None):
     app.error_handler_spec[None]={}    
     for code in default_exceptions:        
         app.register_error_handler(code, make_json_error)                                
-    app.ma = Marshmallow(app)    
-    app.table_proxy = TableProxy(db_handle,app)        
+    app.ma = Marshmallow(app)        
     app.config['DEBUG']=True
     app.config['SECRET_KEY']=FLASK_SECRET_KEY
     return app

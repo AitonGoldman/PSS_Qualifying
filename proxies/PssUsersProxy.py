@@ -4,15 +4,21 @@ class PssUsersProxy():
     SERIALIZE_FULL_PSS_USER=['-password_crypt']
     def __init__(self,
                  sqlAlchemyHandle,
-                 pssDeserializers,
+                 table_proxy,
                  model=None):
         self.sqlAlchemyHandle = sqlAlchemyHandle
-        self.pssDeserializers = pssDeserializers
+        self.table_proxy = table_proxy
+        self.pssDeserializers = self.table_proxy.pssDeserializers
         self.pss_users_model = generate_pss_users_model(self.sqlAlchemyHandle) if model is None else model
 
+    #TODO : implement
     def get_pss_users(self):
         pass
 
+    #TODO : implement
+    def register_pss_user_for_event(self):
+        pass
+    
     def get_pss_user(self,
                      pss_user_id=None,
                      username=None,
