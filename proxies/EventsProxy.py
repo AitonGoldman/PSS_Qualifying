@@ -1,9 +1,8 @@
 from models.Events import generate_event_model
 from proxies import TableProxyError
+from constants.serializers import SERIALIZE_FULL_EVENT
 
 class EventsProxy():
-    SERIALIZE_FULL_EVENT=[]
-    SERIALIZE_EVENT_FOR_NON_EVENT_OWNER=[]    
 
     def __init__(self,                 
                  sqlAlchemyHandle,
@@ -52,21 +51,19 @@ class EventsProxy():
         
         
     #TODO : need unit test
-    def get_events_created_by_user(self,pss_user_id,serialized=True, serializer_type=None):
-        if serializer_type is None:
-            serializer_type = self.SERIALIZE_FULL_EVENT
+    def get_events_created_by_user(self,pss_user_id,serialized=True):
         events = self.event_model.query.filter_by(event_creator_pss_user_id=pss_user_id).all()        
         if serialized:            
             if len(events)==0:
                 return [],[]
             else:                
-                return events,[event.to_dict(extend=serializer_type) for event in events]
+                return events,[event.to_dict() for event in events]
         else:
             return events 
         
     def get_event(self,event_id=None,serialized=True,event_name=None,serializer_type=None):
         if serializer_type is None:
-            serializer_type = self.SERIALIZE_FULL_EVENT
+            serializer_type = SERIALIZE_FULL_EVENT
         query = self.event_model.query
         if event_id:
             query = query.filter_by(event_id=event_id)

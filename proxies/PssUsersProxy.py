@@ -1,7 +1,8 @@
 from models.PssUsers import generate_pss_users_model
+from constants.serializers import SERIALIZE_FULL_PSS_USER
 
 class PssUsersProxy():
-    SERIALIZE_FULL_PSS_USER=['-password_crypt']
+    
     def __init__(self,
                  sqlAlchemyHandle,
                  table_proxy,
@@ -49,7 +50,7 @@ class PssUsersProxy():
         if serialized:
             if pss_user is None:
                 return None,None            
-            dict_to_return = pss_user.to_dict(extend=self.SERIALIZE_FULL_PSS_USER)
+            dict_to_return = pss_user.to_dict(extend=SERIALIZE_FULL_PSS_USER)
             return pss_user,dict_to_return
         else:
             return pss_user if pss_user else None
