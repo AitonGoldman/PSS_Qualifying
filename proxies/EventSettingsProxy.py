@@ -14,23 +14,15 @@ class EventSettingsProxy():
             return event_settings, [event_setting.to_dict() for event_setting in event_settings]
         else:
             return event_settings 
-        
-    # def get_event_setting(self,event_setting_name=None,serialized=True):
-    #     event_setting = self.event_settings_model.query.filter_by(event_setting_name=event_setting_name).first()
-    #     if serialized:
-    #         if event_setting is None:
-    #             return None, None
-    #         dict_to_return = event_setting.to_dict()
-    #         return event_setting,dict_to_return
-    #     else:
-    #         return event_setting
-            
-    def create_event_setting(self,event_setting_name):
+                    
+    def create_event_setting(self,event_setting_name,event_setting_short_description,event_setting_long_description=None):
         event_setting_name_segments = event_setting_name.split("_")
         if len(event_setting_name_segments)==0:
             raise TableProxyError('Setting name does not have underscores')            
         if event_setting_name_segments[0] not in ['string','number','boolean']:
             raise TableProxyError('Setting type is not string, number, or boolean')            
-        new_event_setting = self.event_settings_model(event_setting_name=event_setting_name)
+        new_event_setting = self.event_settings_model(event_setting_name=event_setting_name,
+                                                      event_setting_short_description=event_setting_short_description,
+                                                      event_setting_long_description=event_setting_long_description)
         self.sqlAlchemyHandle.session.add(new_event_setting)                            
         return new_event_setting

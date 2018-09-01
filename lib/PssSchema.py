@@ -1,6 +1,5 @@
 from marshmallow import fields as marshmallow_fields
 from proxies import TableProxyError
-import inspect
 
 class PssSchemaBuilder(object):    
     

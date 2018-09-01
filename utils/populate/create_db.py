@@ -25,7 +25,8 @@ new_user.crypt_password('test')
 real_app.table_proxy.sqlAlchemyHandle.session.add(new_user)
 real_app.table_proxy.commit_changes()
 
-new_event_setting = real_app.table_proxy.event_settings_proxy.event_settings_model(event_setting_name="string_test")
+new_event_setting = real_app.table_proxy.event_settings_proxy.event_settings_model(event_setting_name="string_test",
+                                                                                   event_setting_short_description="test setting")
 new_event = real_app.table_proxy.events_proxy.event_model(event_name='test_event')
 new_event_settings_association = real_app.table_proxy.event_settings_association()
 new_event_settings_association.event_setting=new_event_setting
