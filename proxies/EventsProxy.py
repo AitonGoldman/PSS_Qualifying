@@ -13,13 +13,22 @@ class EventsProxy():
         self.pssDeserializers = table_proxy.pssDeserializers
         self.event_model=generate_event_model(self.sqlAlchemyHandle) if event_model is None else event_model
                 
-    def create_event(self,event_dict,serialized=True):                                    
+    def create_event(self,event_dict,pss_user_id,serialized=True):                                            
+        if 'event_settings_values' in event_dict:
+            event_dict.pop('event_settings_values')
         new_event = self.pssDeserializers.event_schema.deserialize(event_dict)        
         self.pssDeserializers.event_schema.check_deserialize_failures(new_event)
+        new_event.data.event_creator_pss_user_id=pss_user_id
+        for event_setting in self.table_proxy.event_settings_proxy.get_event_settings(serialized=False):
+            event_settings_association = self.table_proxy.event_settings_association()
+            event_settings_association.event_setting=event_setting
+            new_event.data.event_settings_values.append(event_settings_association)                        
+        
         self.sqlAlchemyHandle.session.add(new_event.data)
 
         if serialized:
-            return (new_event.data, new_event.data.to_dict()) if new_event else (None, None)
+            #TODO : make sure new_event.data exists if there is an error in deserialization
+            return (new_event.data, new_event.data.to_dict()) if new_event.data else (None, None)
         else:
             return new_event.data if new_event else None
 
@@ -42,16 +51,16 @@ class EventsProxy():
         return event_setting_value.extra_data if event_setting_value else None       
     
     def get_event_template(self):
-        event_model_template = self.event_model()        
+        new_event_model = self.event_model()        
         for event_setting in self.table_proxy.event_settings_proxy.get_event_settings(serialized=False):
             event_settings_association = self.table_proxy.event_settings_association()
             event_settings_association.event_setting=event_setting
-            event_model_template.event_settings_values.append(event_settings_association)        
-        return {key:value for key,value in event_model_template.to_dict().items() if "_id" not in key}
+            new_event_model.event_settings_values.append(event_settings_association)                
+        return new_event_model.to_dict()
         
         
     #TODO : need unit test
-    def get_events_created_by_user(self,pss_user_id,serialized=True):
+    def get_events_created_by_user(self,pss_user_id,serialized=True):        
         events = self.event_model.query.filter_by(event_creator_pss_user_id=pss_user_id).all()        
         if serialized:            
             if len(events)==0:

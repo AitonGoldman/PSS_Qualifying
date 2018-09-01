@@ -51,12 +51,13 @@ class EventsProxyTest(PssUnitTestBase):
     def test_create_event_simple(self):        
         test_dict = {'event_name':'test_event'}                
         mock_event = MagicMock()
-        mock_event.data.to_dict.return_value=test_dict        
+        mock_event.data.to_dict.return_value=test_dict
+        mock_pss_user_id = 1
         self.table_proxy_mock.pssDeserializers.event_schema.deserialize.return_value=self.mock_event
         self.events_proxy = EventsProxy(self.db_handle_mock,
                                         self.table_proxy_mock,                                        
                                         event_model=self.event_model_mock)
-        event,event_dict = self.events_proxy.create_event(test_dict)        
+        event,event_dict = self.events_proxy.create_event(test_dict,mock_pss_user_id)        
         self.assertEqual(event,self.mock_event.data)
         self.table_proxy_mock.pssDeserializers.event_schema.deserialize.assert_called_with(test_dict)        
         self.mock_event.data.to_dict.assert_called()
@@ -78,3 +79,6 @@ class EventsProxyTest(PssUnitTestBase):
     def test_get_events_created_by_user(self):
         pass
     
+    #TODO
+    def test_update_event(self):
+        pass
