@@ -5,7 +5,7 @@ import time
 
 
 class PssIntegrationTestBase(unittest.TestCase):
-
+    #TODO : change these functions to use rest endpoints, and adjust tests that call them
     def create_user(self,event_creator=False):
         username = self.generate_unique_name('test_user')
         pss_user = self.app.table_proxy.pss_users.pss_users_model(username=username,
@@ -17,11 +17,11 @@ class PssIntegrationTestBase(unittest.TestCase):
         self.app.table_proxy.commit_changes()
         return pss_user
     
-    def create_event(self):
-        event_instance = self.app.table_proxy.events_proxy.event_model(event_name=self.generate_unique_name('test_event'))
-        self.app.table_proxy.sqlAlchemyHandle.session.add(event_instance)
-        self.app.table_proxy.commit_changes()                        
-        return event_instance
+    def create_event_setting(self):
+        new_event_setting = self.app.table_proxy.event_settings_proxy.event_settings_model(event_setting_name="string_test")
+        self.app.table_proxy.sqlAlchemyHandle.session.add(new_event_setting)
+        self.app.table_proxy.sqlAlchemyHandle.session.commit()        
+        return new_event_setting
     
     def login_user(self,pss_user):
         rv = self.app.test_client().put('/login_user',

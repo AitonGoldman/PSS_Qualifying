@@ -13,5 +13,8 @@ class EventRouteTest(PssUnitTestBase):
     #TODO : implement
     def test_get_event(self):                        
         pass
+
+    def test_update_event(self):                        
+        pass
     
     

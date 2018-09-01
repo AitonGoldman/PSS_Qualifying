@@ -43,4 +43,9 @@ class PssUsersProxyTest(PssUnitTestBase):
         self.assertEqual(pss_user,self.pss_user_mock)
         self.pss_user_model_mock.query.filter_by.assert_called_with(username='poop')        
         self.assertEqual(pss_user_dict,test_dict)
-        
+
+    def test_create_pss_user(self):
+        pass
+
+    def get_pss_users_for_event(self):
+        pass

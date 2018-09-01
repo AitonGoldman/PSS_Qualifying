@@ -16,6 +16,7 @@ from flask_marshmallow import Marshmallow
 
 def create_app(test_config=None):    
     app = Flask(__name__, instance_relative_config=True)    
+    app.ma = Marshmallow(app)        
         
     try:
         os.makedirs(app.instance_path)
@@ -57,7 +58,6 @@ def create_app(test_config=None):
     app.error_handler_spec[None]={}    
     for code in default_exceptions:        
         app.register_error_handler(code, make_json_error)                                
-    app.ma = Marshmallow(app)        
     app.config['DEBUG']=True
     app.config['SECRET_KEY']=FLASK_SECRET_KEY
     return app

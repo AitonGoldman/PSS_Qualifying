@@ -47,6 +47,7 @@ class DbHelper():
         if debug:
             flask_app.config['SQLALCHEMY_ECHO']=True
         db_handle = SQLAlchemy(flask_app)        
+        flask_app.table_proxy = TableProxy(db_handle,flask_app)        
         return db_handle
 
     def create_db_and_tables(self, app, drop_tables=False):            
@@ -56,7 +57,6 @@ class DbHelper():
         db_handle = self.create_db_handle(app)
         #if self.db_type == POSTGRES_TYPE:
         #    self.check_if_ranking_funcs_exists(db_handle)        
-        app.table_proxy = TableProxy(db_handle,app)        
         self.create_tables(db_handle, drop_tables=drop_tables)
         db_handle.engine.dispose()                                                     
     

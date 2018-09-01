@@ -3,15 +3,15 @@ from flask import current_app,jsonify, g
 from flask_restless.helpers import to_dict
 from werkzeug.exceptions import BadRequest, Unauthorized, NotFound
 from lib.auth import permissions
+from proxies import TableProxyError
 
 def create_event(table_proxy,event_dict):
     if table_proxy.events_proxy.get_event(serialized=False,event_name=event_dict.get('event_name',None)):
         raise BadRequest('Event by that name already exists')
-    event = table_proxy.events_proxy.create_event(event_dict, serialized=False)    
-    #TODO : check if create_event actually returns None when there is a bad json uploaded
-    #TODO : check what happens when you try and serialize an event with an event_id filled in
-    if event is None:
-        raise BadRequest("Could not create event with configuration options submitted")
+    try:
+        event = table_proxy.events_proxy.create_event(event_dict, serialized=False)
+    except TableProxyError as e:        
+        raise BadRequest("Failed to create event - experienced the following error : "+str(e))        
     table_proxy.commit_changes()
     return event.to_dict()
 
@@ -22,7 +22,12 @@ def create_event_route():
         raise Unauthorized('You are not authorized to create an event')
     dict_to_return = create_event(current_app.table_proxy,g.request_data)
     return jsonify({'data':dict_to_return})
-    
+
+#TODO : implement
+@event_bp.route('/event', methods=["PUT"])
+def update_event_route():                        
+    return jsonify({'data':None})
+
 def get_event_template(table_proxy):
     return table_proxy.events_proxy.get_event_template()
 

@@ -1,4 +1,5 @@
 from marshmallow import fields
+from proxies import TableProxyError
 
 class PssSchemaBuilder(object):    
     
@@ -36,5 +37,9 @@ class PssSchemaBuilder(object):
     def get_schema(self):
         return self.schema
     
-    def deserialize(self, dict):
-        return self.schema().load(dict)
+    def deserialize(self, dict, instance=None):
+        return self.schema().load(dict,instance=instance)
+
+    def check_deserialize_failures(self, result):
+        if len(list(result.errors.keys())) > 0:                        
+            raise TableProxyError(str(result.errors))

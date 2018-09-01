@@ -15,7 +15,7 @@ The code in this branch will be a minimum skeleton to demonstrate how PSS_Qualif
 ## A quick demo
 Before we start the tutorial, let's try using the skeleton to get information about the event that was inserted into the database by the bootstrapping script.  We do this by running the following command at the top level of the PSS_Qualifying repo : 
 ```
-PYTHONPATH=. gunicorn -b 0.0.0.0:8000 'app:create_app' -w 1 --reload
+PYTHONPATH=. gunicorn -b 0.0.0.0:8000 'app:create_app()' -w 1 --reload
 ```
 You have now started the PSS_Qualifying server on port 8000.   In order to use the PSS_Qualifying server to get the info for the existing event in the database, hit the url `http://0.0.0.0:8000/event/1` (in a seperate shell with `curl` or through your webbrowser) and you will get the event info that looks like this : 
 ```
