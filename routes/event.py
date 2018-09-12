@@ -5,7 +5,6 @@ from werkzeug.exceptions import BadRequest, Unauthorized, NotFound
 from lib.auth import permissions
 from proxies import TableProxyError
 from flask_login import current_user
-from flask_principal import identity_changed, Identity
 
 def update_event(table_proxy,event_dict):
     event_id = event_dict.get("event_id")
@@ -16,6 +15,7 @@ def update_event(table_proxy,event_dict):
     return updated_event_dict
 
 def create_event(table_proxy,event_dict,pss_user_id):
+    #TODO : need to generate random name if one not provided?  or just fail?
     if table_proxy.events_proxy.get_event(serialized=False,event_name=event_dict.get('event_name',None)):
         raise BadRequest('Event by that name already exists')
     try:

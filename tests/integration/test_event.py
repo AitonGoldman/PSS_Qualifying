@@ -8,29 +8,6 @@ class IntegrationTestEvents(PssIntegrationTestBase):
         self.event_creator_pss_user = self.create_user(event_creator=True)        
         self.flask_headers = self.login_user(self.event_creator_pss_user)            
 
-    def post_pss_endpoint(self,endpoint,data):
-        rv = self.app.test_client().post(endpoint,
-                                         headers=self.flask_headers,
-                                         data=json.dumps(data))        
-        self.assertEqual(rv.status,'200 OK',str(rv.data))        
-        return json.loads(rv.get_data(as_text=True))        
-
-    def put_pss_endpoint(self,endpoint,data):
-        rv = self.app.test_client().put(endpoint,
-                                        headers=self.flask_headers,
-                                        data=json.dumps(data))        
-        self.assertEqual(rv.status,'200 OK',str(rv.data))        
-        return json.loads(rv.get_data(as_text=True))        
-    
-    def get_pss_endpoint(self,endpoint):
-        rv = self.app.test_client().get(endpoint,
-                                        headers=self.flask_headers)        
-        self.assertEqual(rv.status,'200 OK',str(rv.data))        
-        return json.loads(rv.get_data(as_text=True))                        
-
-    def create_event(self,data):
-        return self.post_pss_endpoint('/event',data)['data']
-
     def update_event(self,data):
         return self.put_pss_endpoint('/event',data)['data']
 
@@ -66,4 +43,5 @@ class IntegrationTestEvents(PssIntegrationTestBase):
         updated_event_json = self.update_event(event_json)                
         self.assertTrue(event_json['event_settings_values'][0]['extra_data']=="poop")
         
-        
+    def test_update_event_with_wrong_event_creator(self):
+        pass

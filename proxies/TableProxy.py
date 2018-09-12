@@ -14,7 +14,7 @@ class PssDeserializers():
 
     def buildDeserializers(self):        
         self.event_schema = PssSchemaBuilder(self.app,"Events",self.table_proxy.events_proxy.event_model,session=self.table_proxy.sqlAlchemyHandle.session).initialize_pss_schema()        
-        self.pss_user_schema = PssSchemaBuilder(self.app,"PssUsers",self.table_proxy.pss_users.pss_users_model).initialize_pss_schema()                
+        self.pss_user_schema = PssSchemaBuilder(self.app,"PssUsers",self.table_proxy.pss_users.pss_users_model,session=self.table_proxy.sqlAlchemyHandle.session).initialize_pss_schema()                
     
 class TableProxy():
     def __init__(self, sqlAlchemyHandle, app):
@@ -33,5 +33,5 @@ class TableProxy():
         try:
             self.sqlAlchemyHandle.session.commit()
             return True
-        except sqlalchemy.exc.IntegrityError as e:            
+        except sqlalchemy.exc.IntegrityError as e:                        
             return False

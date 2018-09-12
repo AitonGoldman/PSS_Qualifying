@@ -39,6 +39,7 @@ class PssSchemaBuilder(object):
         return self.schema
     
     def deserialize(self, dict, instance=None):
+        #TODO : it would make testing much easier if .data was returned here, but would need a way to check deserialize failure (maybe directly?)
         return self.schema().load(dict,instance=instance)
 
     def check_deserialize_failures(self, result):

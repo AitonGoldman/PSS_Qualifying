@@ -7,7 +7,7 @@ def generate_pss_users_model(db_handle):
         username = db_handle.Column(db_handle.String(80), unique=True, nullable=False)
         first_name = db_handle.Column(db_handle.String(80), nullable=False)
         last_name = db_handle.Column(db_handle.String(80), nullable=False)
-        extra_title = db_handle.Column(db_handle.String(80))
+        extra_title = db_handle.Column(db_handle.String(80))        
         password_crypt = db_handle.Column(db_handle.String(134))
         has_picture = db_handle.Column(db_handle.Boolean(),default=False)
         push_token=db_handle.Column(db_handle.String(500))

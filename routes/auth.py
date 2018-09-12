@@ -4,6 +4,7 @@ from werkzeug.exceptions import BadRequest, Unauthorized
 from flask_login import login_user as flask_login_user,logout_user as flask_logout_user, current_user
 from flask_principal import identity_changed, Identity
 
+#TODO : need to move passwords for non event creators to usereventmapping object
 def login_user(app, request_data):
     if 'username' not in request_data or 'password' not in request_data:
         raise BadRequest('Username or password not specified')    
