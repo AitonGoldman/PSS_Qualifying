@@ -5,7 +5,10 @@ When running commands using sudo, it will ask you for a password.  Give the pass
 - Get the latest version of VirtualBox
 - Get the latest version of the ubuntu server iso ( https://www.ubuntu.com/download/server )
 - Create a new VM for a 64 bit linux (accepting all the defaults)
-- Once the VM is created, point "insert" the ubuntu iso into the virtual cd rom 
+- Once the VM is created, make sure there is only ONE virtual optical drive for the VM.  
+  - See this link for instructions on how to remove extra virtual optical drives : https://progmar.net.pl/en/knowledge-base/virtualbox-adding-removing-disk-drive (goto the seciton titled Removing disk in VirtualBox)
+
+- "insert" the ubuntu iso into the virtual cd rom 
   - See this link for details on how to do this : https://askubuntu.com/questions/64915/how-do-i-install-ubuntu-on-a-virtualbox-client-from-an-iso-image
 - Start the VM and go through the ubuntu install process
 - "Remove" the iso from the virtual cd rom and let the VM restart
@@ -13,7 +16,7 @@ When running commands using sudo, it will ask you for a password.  Give the pass
 - Once the VM has restarted, login to VM
 - While the VM window is selected, under the "Devices" menu, select "Insert guest additions..."
 - In the VM, run the following command to install needed packages : `sudo apt-get install gcc make build-essential`
-- In the VM, run the following command to mount the cdrom and install the virtualbox guest additions : `mkdir /media/cdrom;mount /dev/cdrom /media/cdrom` and then 'cd /media/cdrom;sudo sh VboxLinuxAdditions.run'
+- In the VM, run the following command to mount the cdrom and install the virtualbox guest additions : `mkdir /media/cdrom;mount /dev/cdrom /media/cdrom` and then 'cd /media/cdrom;sudo sh VBoxLinuxAdditions.run'
 - sudo adduser $USER vboxsf
   - $USER is set to the user you created as part of the ubuntu installation process
 - Reboot the VM
